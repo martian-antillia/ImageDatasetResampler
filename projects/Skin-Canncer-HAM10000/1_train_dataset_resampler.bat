@@ -1,5 +1,5 @@
 rem 1_train_dataset_resampler.bat
-python ../../DatasetSampler.py ^
+python ../../DatasetResampler.py ^
   --image_size=600x450 ^
   --data_dir=./HAM10000/Training  ^
   --resampled_dir=./Resampled_HAM10000/Training ^

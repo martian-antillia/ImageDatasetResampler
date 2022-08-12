@@ -69,7 +69,9 @@ python ../../DatasetSampler.py ^
   --strategy=CUSTOM_SAMPLING ^
   --num_sample_images=100
 </pre>
-
+Console output:<br>
+<img src="./asset/train_dataset_resampling.png">
+<br>
 <h3>
 1.2.2 Resampling tesing dataset
 </h3>
@@ -85,3 +87,5 @@ python ../../DatasetReSampler.py ^
   --resampled_dir=./Resampled_HAM10000/Testing ^
   --strategy=UNDER_SAMPLING 
 </pre>
+Console output:<br>
+<img src="./asset/test_dataset_resampling.png">

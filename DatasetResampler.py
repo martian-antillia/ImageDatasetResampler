@@ -62,7 +62,7 @@ def define_flags():
   flags.DEFINE_string('resampled_dir',  None, 'Location of resampled dataset images')
   flags.DEFINE_string('strategy', None, 'Data resampling strateg')
   flags.DEFINE_integer('num_sample_images', None, 'Number of images of sampling.')
-
+  flags.DEFINE_boolean('debug', False, 'Debug flag')
 
 
 class DatasetReSampler:
@@ -85,16 +85,17 @@ class DatasetReSampler:
       raise Exception("Invalid strategy {}".format(self.strategy)) 
 
   def copy_all(self, mini_dataset, augmented_dataset):
-    print("---  OverSampler.copy_all() ")
+    #print("---  copy_all() ")
     dataset_dir, load_format = mini_dataset
     save_dataset_dir, _     = augmented_dataset
     files = glob.glob(dataset_dir + "/*." + load_format)
     for i, file in enumerate(files):
       shutil.copy2(file, save_dataset_dir)
-      print("--- copy2 from {} to {}".format(file, save_dataset_dir)) 
+      if FLAGS.debug:
+        print("--- copy2 from {} to {}".format(file, save_dataset_dir)) 
 
   def random_sampling(self, mini_dataset, augmented_dataset, n_samples):
-    print("---  OverSampler.randoms_sampling() ")
+    #print("---  randoms_sampling() ")
     dataset_dir, load_format = mini_dataset
     save_dataset_dir, _      = augmented_dataset
 
@@ -102,7 +103,8 @@ class DatasetReSampler:
     samples = random.sample(files, n_samples)
     for i, file in enumerate(samples):
       shutil.copy2(file, save_dataset_dir)
-      print("--- copy2 from {} to {}".format(file, save_dataset_dir)) 
+      if FLAGS.debug:
+        print("--- copy2 from {} to {}".format(file, save_dataset_dir)) 
 
 
   def augmentation(self, sub_dataset, aug_sub_dataset, image_size, num_augmentation):     
@@ -123,6 +125,7 @@ class DatasetReSampler:
                            image_size = image_size,
                            n_augmentation=num_augmentation)
 
+  # Skin Cancer HAM10000
   def run(self, image_size       = (600, 450), 
                 base_dataset_dir = "./HAM10000/Training",
                 base_augment_dataset_dir  = "./OverSampling_HAM10000/Training"):
@@ -145,18 +148,18 @@ class DatasetReSampler:
         MAX_NUM = flen
       if flen <= MIN_NUM:
         MIN_NUM = flen
-
-    print("--- file_statistis {}".format(statistics))
+    print("\n--- Original dataset")
+    print("--- statistics:\n{}".format(statistics))
     
     num_labels = len(labels)
     MEAN_NUM = int(SUM/num_labels)
-    print("--- MEAN_NUM {}".format(MEAN_NUM))
+    #print("--- MEAN_NUM {}".format(MEAN_NUM))
     augmentations = []
 
     for  item in statistics:
       label, num = item
       if self.strategy == self.UNDER_SAMPLING:
-        print("--- UNDER_SAMPLLING ")
+        #print("--- UNDER_SAMPLLING ")
         self.NUM_SAMPLE_IMAGES = MIN_NUM
         augmentations.append((label, int(MIN_NUM/num)))
 
@@ -171,14 +174,15 @@ class DatasetReSampler:
 
       elif self.strategy == self.CUSTOM_SAMPLING:
         augmentations.append((label, int(self.NUM_SAMPLE_IMAGES/num)))
-
-    print(augmentations)
-    input("Hit any key")
+    if FLAGS.debug:
+      print("--- Resampling parameter")
+      print(augmentations)
+    #input("Hit any key")
     if not os.path.join(base_augment_dataset_dir):
       os.makedirs(base_augment_dataset_dir)
 
     for augmentation in augmentations:
-      print("--- {}".format(augmentation))
+      #print("--- {}".format(augmentation))
       (label, num_augmentation) = augmentation
       # 1 Generate augmented images from mini_dataset,  and save them to augmented_dataset.
       sub_dataset_dir     = os.path.join(base_dataset_dir, label)
@@ -190,34 +194,35 @@ class DatasetReSampler:
         raise Exception("----Not found {}".format(sub_dataset_dir))
       if os.path.exists(aug_sub_dataset_dir):
         shutil.rmtree(aug_sub_dataset_dir)
-        print("--- removed existing files {}".format(aug_sub_dataset_dir))
+        #print("--- removed existing files {}".format(aug_sub_dataset_dir))
       if not os.path.exists(aug_sub_dataset_dir):
         os.makedirs(aug_sub_dataset_dir)
     
       if num_augmentation == self.RANDOM_SAMPLING:
-        print("--- RANDOM_SAMPLING {}".format(num_augmentation))
+        #print("--- RANDOM_SAMPLING {}".format(num_augmentation))
         #input("HIT ANY KEY")
         self.random_sampling(sub_dataset, aug_sub_dataset, self.NUM_SAMPLE_IMAGES)
     
       elif num_augmentation == self.COPY_ALL:
-        print("--- COPY ALL {}".format(num_augmentation))
-        input("HIT ANY KEY")
+        #print("--- COPY ALL {}".format(num_augmentation))
+        #input("HIT ANY KEY")
         self.copy_all(sub_dataset, aug_sub_dataset)
         
       elif num_augmentation >= self.NEED_AUGMENTATION:
-        print("--- NEED_AUGMENTATION {}".format(num_augmentation))
-        input("HIT ANY KEY")
+        #print("--- NEED_AUGMENTATION {}".format(num_augmentation))
+        #input("HIT ANY KEY")
         self.augmentation(sub_dataset, aug_sub_dataset, image_size, num_augmentation)
       else:
         raise Exception("--- Invalid num_augmentation  " + str(num_augmentation))
  
-      self.show_resampled_dataset(base_augment_dataset_dir)
+    self.show_resampled_dataset(base_augment_dataset_dir)
 
 
   def show_resampled_dataset(self, dataset_dir):
+    print("\n--- Resampled dataset")
     labels = os.listdir(dataset_dir)
     labels = sorted(labels)
-    print("--- labeles {}".format(labels))
+    #print("--- labeles {}".format(labels))
     statistics = []
     
     for label in labels:
@@ -225,7 +230,7 @@ class DatasetReSampler:
       files  = glob.glob(subdir + "/*.jpg")
       flen   = len(files)
       statistics.append((label, flen))
-    print("--- file_statistis {}".format(statistics))
+    print("--- statistics:\n{}".format(statistics))
 
 
          
@@ -240,11 +245,10 @@ def main(_):
     strategy      = FLAGS.strategy
     num_sample_images = FLAGS.num_sample_images
 
-    print("--- image_size   {}".format(image_size))
-    print("--- base_images_dir {}".format(data_dir))
-    print("--- aug_base_images_dir  {}".format(resampled_dir ))
-    print("--- strategy {}".format(strategy))
-    print("--- custom_max_num {}".format(num_sample_images))
+    print("--- image_size     {}".format(image_size))
+    print("--- dataset_dir    {}".format(data_dir))
+    print("--- resampled_dir  {}".format(resampled_dir ))
+    print("--- strategy       {}".format(strategy))
 
     sampler = DatasetReSampler(strategy          = strategy, 
                                num_sample_images = num_sample_images)
