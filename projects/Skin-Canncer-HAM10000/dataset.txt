@@ -1,0 +1,39 @@
+This dataset HAM10000 has been taken from the following web site:
+
+The HAM10000 dataset, a large collection of multi-source dermatoscopic images of common pigmented skin lesions
+
+Harvard edu dataset:
+
+ https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/DBW86T
+
+
+HAM10000 folder has Testing and Training subfolders, and they have classified subfolders
+of akiec, bcc, bkl, df, mel, nv, vasc.
+
+
+HAM10000
+├─Testing
+│  ├─akiec
+│  ├─bcc
+│  ├─bkl
+│  ├─df
+│  ├─mel
+│  ├─nv
+│  └─vasc
+└─Training
+    ├─akiec
+    ├─bcc
+    ├─bkl
+    ├─df
+    ├─mel
+    ├─nv
+    └─vasc
+
+Training dataset has been reconstructed from 
+  HAM10000_images_part_1.zip and HAM10000_metadata.tab in Harvard edu dataset above:
+
+
+Training dataset has been reconstructed from 
+  HAM10000_images_part_2.zip and HAM10000_metadata.tab in Harvard edu dataset above:
+
+

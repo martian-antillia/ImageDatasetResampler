@@ -127,3 +127,8 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# DATASET
+projects/Skin-Canncer-HAM10000/HAM10000/
+projects/Skin-Canncer-HAM10000/Resampled_HAM10000/
+
