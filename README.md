@@ -10,6 +10,11 @@ Custom_Sampling.<br>
 <br>
 We use Python 3.8 and Tensorflow 2.8.0 environment on Windows 11.
 <br>
+In cases of Mean, Over and Custom Samplings, we use <a href="./OfflineDataSetAugmentor.py">OfflineDataSetAugmentor</a> class, in which
+<pre>
+tf.keras.preprocessing.image.ImageDataGenerator
+</pre>
+is used to augment images in minority classes.
 <h2>
 1 Project 
 </h2>
