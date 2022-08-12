@@ -68,7 +68,6 @@ python ../../DatasetSampler.py ^
   --resampled_dir=./Resampled_HAM10000/Training ^
   --strategy=CUSTOM_SAMPLING ^
   --num_sample_images=100
-
 </pre>
 
 <h3>
@@ -80,11 +79,9 @@ Run the following command:<br>
 </pre>
 <pre>
 rem 2_test_dataset_resampler.bat
-python ../../DatasetSampler.py ^
+python ../../DatasetReSampler.py ^
   --image_size=600x450 ^
-  --data_dir=./HAM10000/Training  ^
-  --resampled_dir=./Resampled_HAM10000/Training ^
-  --strategy=CUSTOM_SAMPLING ^
-  --num_sample_images=100
-
+  --data_dir=./HAM10000/Testing  ^
+  --resampled_dir=./Resampled_HAM10000/Testing ^
+  --strategy=UNDER_SAMPLING 
 </pre>
