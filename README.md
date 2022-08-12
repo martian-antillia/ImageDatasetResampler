@@ -1,8 +1,15 @@
 <h2>
 ImageDatasetResampler (Updated: 2022/08/12)
 </h2>
-Image Dataset Resampling Tool
-
+This is a simple Image Dataset Resampling Tool to resample original
+image dataset, which supports the following strategies:<br>
+Under_Sampling,<br>
+Mean_Sampling,<br> 
+Over_Sampling,<br> 
+Custom_Sampling.<br>
+<br>
+We use Python 3.8 and Tensorflow 2.8.0 environment on Windows 11.
+<br>
 <h2>
 1 Project 
 </h2>
