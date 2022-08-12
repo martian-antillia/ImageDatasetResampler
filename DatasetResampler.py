@@ -197,7 +197,7 @@ class DatasetReSampler:
       if num_augmentation == self.RANDOM_SAMPLING:
         print("--- RANDOM_SAMPLING {}".format(num_augmentation))
         #input("HIT ANY KEY")
-        self.random_sampling(sub_dataset, aug_sub_dataset, self.CUSTOM_NUM_IMAGES)
+        self.random_sampling(sub_dataset, aug_sub_dataset, self.NUM_SAMPLE_IMAGES)
     
       elif num_augmentation == self.COPY_ALL:
         print("--- COPY ALL {}".format(num_augmentation))
