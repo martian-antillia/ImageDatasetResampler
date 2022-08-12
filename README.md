@@ -31,7 +31,7 @@ Harvard edu dataset:
 
 
 HAM10000 folder has Testing and Training subfolders, and they have classified subfolders
-of akiec, bcc, bkl, df, mel, nv, vasc.
+of akiec, bcc, bkl, df, mel, nv, and vasc as shown below:
 
 <pre>
 HAM10000
