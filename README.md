@@ -101,3 +101,11 @@ python ../../DatasetReSampler.py ^
 </pre>
 Console output:<br>
 <img src="./asset/test_dataset_resampling.png">
+
+
+<h3>
+1.1.3 Download Resampled_HAM10000
+</h3>
+You can download the generated <b>Skin Cancer Resampled_HAM10000</b> dataset from the following google drive:<br>
+ <a href="https://drive.google.com/file/d/1OqRiuFArflpw-8Anm2UV4EdyfS77ANTA/view?usp=sharing">Resampled_HAM10000.zip</a>
+
