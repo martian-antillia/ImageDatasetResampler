@@ -19,9 +19,9 @@ is used to augment images in minority classes.
 1 Project 
 </h2>
 <h3>
-1.1 Skin-Canncer-HAM10000
+1.1 Skin-Cancer-HAM10000
 </h3>
-The dataset <b>Skin-Canncer-HAM10000</b> has been taken from the following web site:
+The dataset <b>Skin-Cancer-HAM10000</b> has been taken from the following web site:
 
 The HAM10000 dataset, a large collection of multi-source dermatoscopic images of common pigmented skin lesions
 
@@ -61,9 +61,9 @@ Training dataset has been reconstructed from
 
 
 <h3>
-1.2 Resampling Skin-Canncer-HAM10000
+1.2 Resampling Skin-Cancer-HAM10000
 </h3>
-Skin-Canncer-HAM10000 dataset is a typical imbalanced dataset.
+Skin-Cancer-HAM10000 dataset is a typical imbalanced dataset.
 <br>
 <h3>
 1.2.1 Resampling training dataset
