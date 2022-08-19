@@ -32,6 +32,7 @@ import glob
 
 sys.path.append('../../')
 
+from ConfigParser  import ConfigParser
 from OfflineDataSetAugmentor import *
 
 
@@ -40,7 +41,7 @@ from OfflineDataSetAugmentor import *
 """
 Example: skin cancer HAM10000
 
-skin cancer HAM10000/Training dataset
+skin cancer HAM10000/PARAMETERS dataset
 --------------------
 class   num_images   
 akiec   183          
@@ -57,16 +58,22 @@ FLAGS = flags.FLAGS
 
 def define_flags():
   """Define all flags for binary run."""
+  flags.DEFINE_string('data_generator_config', None, 'Path to an image augmentation configuration file.')
+
   flags.DEFINE_string('image_size', '600x450', 'Image size (WIDTHxHEIGNT).')
+
   flags.DEFINE_string('data_dir', None, 'Locattion of orignal dataset images.')
   flags.DEFINE_string('resampled_dir',  None, 'Location of resampled dataset images')
-  flags.DEFINE_string('strategy', None, 'Data resampling strateg')
+  flags.DEFINE_string('strategy', None, 'Data resampling strategy')
   flags.DEFINE_integer('num_sample_images', None, 'Number of images of sampling.')
   flags.DEFINE_boolean('debug', False, 'Debug flag')
 
 
 class DatasetReSampler:
-  def __init__(self, strategy="CUSTOM_SAMPLIG", num_sample_images=130):
+  def __init__(self, 
+               strategy="CUSTOM_SAMPLIG", 
+               num_sample_images=130,
+               data_generator_config=None):
     self.strategy     = strategy
     self.UNDER_SAMPLING    = "UNDER_SAMPLING"
     self.MEAN_SAMPLING     = "MEAN_SAMPLING"
@@ -83,6 +90,7 @@ class DatasetReSampler:
                   self.CUSTOM_SAMPLING]
     if not self.strategy in strategies:
       raise Exception("Invalid strategy {}".format(self.strategy)) 
+    self.data_generator_config = data_generator_config
 
   def copy_all(self, mini_dataset, augmented_dataset):
     #print("---  copy_all() ")
@@ -107,8 +115,34 @@ class DatasetReSampler:
         print("--- copy2 from {} to {}".format(file, save_dataset_dir)) 
 
 
-  def augmentation(self, sub_dataset, aug_sub_dataset, image_size, num_augmentation):     
-    generator = tf.keras.preprocessing.image.ImageDataGenerator(
+  def augmentation(self, sub_dataset, aug_sub_dataset, image_size, num_augmentation):
+    if self.data_generator_config != None:
+      parser = ConfigParser(self.data_generator_config)
+      PARAMETERS = "parameters"
+      generator = tf.keras.preprocessing.image.ImageDataGenerator(
+          featurewise_center              = parser.get(PARAMETERS, "featurewise_center", False),
+          samplewise_center               = parser.get(PARAMETERS, "samplewise_center",  False),
+          featurewise_std_normalization   = parser.get(PARAMETERS, "featurewise_std_normalization", False),
+          samplewise_std_normalization    = parser.get(PARAMETERS, "samplewise_std_normalization", False),
+          zca_whitening                   = parser.get(PARAMETERS, "zca_whitening",                False),
+   
+          rotation_range                  = parser.get(PARAMETERS, "rotation_range", 8),
+          horizontal_flip                 = parser.get(PARAMETERS, "horizontal_flip", True),
+          vertical_flip                   = parser.get(PARAMETERS, "vertical_flip", True),
+
+          width_shift_range               = parser.get(PARAMETERS, "width_shift_range", 0.9), 
+          height_shift_range              = parser.get(PARAMETERS, "height_shift_range", 0.9),
+          shear_range                     = parser.get(PARAMETERS, "shear_range", 0.1), 
+          zoom_range                      = parser.get(PARAMETERS, "zoom_range", 0.1), 
+          #zoom_range         = [0.8, 1.2],
+          )
+    else: 
+      generator = tf.keras.preprocessing.image.ImageDataGenerator(
+                                        featurewise_center = True,
+                                        samplewise_center  = False,
+                                        featurewise_std_normalization=True,
+                                        samplewise_std_normalization =False,
+
                                         rotation_range     = 20,    
                                         width_shift_range  = 0.2, #1.0, 
                                         height_shift_range = 0.2,
@@ -127,8 +161,8 @@ class DatasetReSampler:
 
   # Skin Cancer HAM10000
   def run(self, image_size       = (600, 450), 
-                base_dataset_dir = "./HAM10000/Training",
-                base_augment_dataset_dir  = "./OverSampling_HAM10000/Training"):
+                base_dataset_dir = "./HAM10000/PARAMETERS",
+                base_augment_dataset_dir  = "./OverSampling_HAM10000/PARAMETERS"):
          
     labels = os.listdir(base_dataset_dir)
     labels = sorted(labels)
@@ -214,11 +248,13 @@ class DatasetReSampler:
         self.augmentation(sub_dataset, aug_sub_dataset, image_size, num_augmentation)
       else:
         raise Exception("--- Invalid num_augmentation  " + str(num_augmentation))
- 
-    self.show_resampled_dataset(base_augment_dataset_dir)
+
+    self.show_dataset_statistics(base_dataset_dir)
+
+    self.show_dataset_statistics(base_augment_dataset_dir)
 
 
-  def show_resampled_dataset(self, dataset_dir):
+  def show_dataset_statistics(self, dataset_dir):
     print("\n--- Resampled dataset")
     labels = os.listdir(dataset_dir)
     labels = sorted(labels)
@@ -244,14 +280,19 @@ def main(_):
     resampled_dir = FLAGS.resampled_dir
     strategy      = FLAGS.strategy
     num_sample_images = FLAGS.num_sample_images
+    data_generator_config = FLAGS.data_generator_config
 
     print("--- image_size     {}".format(image_size))
     print("--- dataset_dir    {}".format(data_dir))
     print("--- resampled_dir  {}".format(resampled_dir ))
     print("--- strategy       {}".format(strategy))
+    print("--- data_generator_config       {}".format(data_generator_config))
+    if not os.path.exists(data_generator_config):
+      raise Exception("Not found " + data_generator_config)
 
     sampler = DatasetReSampler(strategy          = strategy, 
-                               num_sample_images = num_sample_images)
+                               num_sample_images = num_sample_images,
+                               data_generator_config = data_generator_config)
     sampler.run(image_size, data_dir, resampled_dir)
     
   except:

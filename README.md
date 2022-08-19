@@ -75,6 +75,7 @@ Run the following command:<br>
 <pre>
 rem 1_train_dataset_resampler.bat
 python ../../DatasetSampler.py ^
+  --data_generator_config=./data_generator.config ^
   --image_size=600x450 ^
   --data_dir=./HAM10000/Training  ^
   --resampled_dir=./Resampled_HAM10000/Training ^
@@ -94,6 +95,7 @@ Run the following command:<br>
 <pre>
 rem 2_test_dataset_resampler.bat
 python ../../DatasetReSampler.py ^
+  --data_generator_config=./data_generator.config ^
   --image_size=600x450 ^
   --data_dir=./HAM10000/Testing  ^
   --resampled_dir=./Resampled_HAM10000/Testing ^
@@ -112,53 +114,57 @@ You can download the generated <b>Skin Cancer Resampled_HAM10000</b> dataset fro
 <!--
   -->
 <h3>
-1.3 Resampling Skin-Cancer-HAM10000-700
+1.3 Resampling Skin-Cancer-HAM10000-500
 </h3>
 You can also generate other Resampled dataset from Skin-Cancer-HAM10000 dataset.
 <br>
 <h3>
 1.3.1 Resampling training dataset
 </h3>
-Run the following command to generate Resampled-HAM10000-700/Training dataset:<br>
+Run the following command to generate Resampled-HAM10000-500/Training dataset:<br>
 <pre>
-./1_train_dataset_resampler_700.bat
+./1_train_dataset_resampler_500.bat
 </pre>
 <pre>
-rem 1_train_dataset_resampler.bat
+rem 1_train_dataset_resampler_500.bat
 python ../../DatasetSampler.py ^
+  --data_generator_config=./data_generator.config ^
   --image_size=600x450 ^
   --data_dir=./HAM10000/Training  ^
-  --resampled_dir=./Resampled_HAM10000-700/Training ^
+  --resampled_dir=./Resampled_HAM10000-500/Training ^
   --strategy=CUSTOM_SAMPLING ^
-  --num_sample_images=700
+  --num_sample_images=500
 </pre>
 Console output:<br>
-<img src="./asset/train_dataset_resampling_num_sample_image_700.png" with="720" height="auto">
+<img src="./asset/train_dataset_resampling_num_sample_image_500.png" with="720" height="auto">
 <br>
 <h3>
 1.3.2 Resampling tesing dataset
 </h3>
 Run the following command:<br>
 <pre>
-./2_test_dataset_resampler_700.bat
+./2_test_dataset_resampler_500.bat
 </pre>
 <pre>
-rem 2_test_dataset_resampler.bat
+rem 2_test_dataset_resampler_500.bat
 python ../../DatasetReSampler.py ^
+  --data_generator_config=./data_generator.config ^
   --image_size=600x450 ^
   --data_dir=./HAM10000/Testing  ^
-  --resampled_dir=./Resampled_HAM10000-700/Testing ^
+  --resampled_dir=./Resampled_HAM10000-500/Testing ^
   --strategy=CUSTOM_SAMPLING ^
-  --num_sample_images=200
+  --num_sample_images=150
 </pre>
 Console output:<br>
-<img src="./asset/test_dataset_resampling_num_sample_image_700.png" with="720" height="auto">
+<img src="./asset/test_dataset_resampling_num_sample_image_500.png" with="720" height="auto">
 
 
 <h3>
-1.2.3 Download Resampled_HAM10000-700
+1.2.3 Download Resampled_HAM10000-500
 </h3>
-You can download the generated <b>Skin Cancer Resampled_HAM10000-700</b> dataset from the following google drive:<br>
-<a href="https://drive.google.com/file/d/1e1LaKTJ6z3Hst-U6IfHqX8gMP76jPKCa/view?usp=sharing">
-Resampled_HAM10000-7000.zip
+You can download the generated <b>Skin Cancer Resampled_HAM10000-500</b> dataset from the following google drive:<br>
+<a href="https://drive.google.com/file/d/1YMiBacM_5kEn82z7nPy02hAf4Tko0cIG/view?usp=sharing">
+Resampled_HAM10000-500.zip
 </a>
+
+

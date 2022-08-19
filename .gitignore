@@ -131,4 +131,6 @@ dmypy.json
 # DATASET
 projects/Skin-Cancer-HAM10000/HAM10000/
 projects/Skin-Cancer-HAM10000/Resampled_HAM10000/
+projects/Skin-Cancer-HAM10000/Resampled_HAM10000-500/
+projects/Skin-Cancer-HAM10000/Resampled_HAM10000-700/
 
