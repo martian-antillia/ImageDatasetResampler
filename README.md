@@ -15,6 +15,7 @@ In cases of Mean, Over and Custom Samplings, we use <a href="./OfflineDataSetAug
 tf.keras.preprocessing.image.ImageDataGenerator
 </pre>
 is used to augment images in minority classes.<br>
+<br>
 <li>
 2022/08/21: Modified to reset radom_seeds, and to use a seed parameter 
  in generate method of OfflineDatasetAugmentor class.
