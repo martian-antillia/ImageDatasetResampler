@@ -58,9 +58,12 @@ class OfflineDataSetAugmentor:
 
   # The parameters mini_dataset and augmented_dataset 
   # will take a tuple (dataset_folder, image_format) respectively
-  def generate(self, mini_dataset, augmented_dataset, 
-                     image_size=(128, 128), 
-                     n_augmentation= 1000):
+  def generate(self, 
+              mini_dataset, 
+              augmented_dataset, 
+              image_size     =(128, 128), 
+              n_augmentation = 1000,
+              seed           = 123):
   
     print("--- OfflineDataSetAugmentor.generate()")
 
@@ -101,7 +104,8 @@ class OfflineDataSetAugmentor:
           flow  = self.generator.flow(self.data, batch_size=1, 
                       save_to_dir = save_folder,
                       save_prefix = name, 
-                      save_format=  self.save_format)
+                      save_format =  self.save_format,
+                      seed        = seed)
 
           # Get generated images from the flow, and save them to the save_folder  
           for i in range(n_augmentation):

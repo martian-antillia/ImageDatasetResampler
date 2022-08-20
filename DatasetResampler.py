@@ -20,15 +20,22 @@
 
 import sys
 import os
+#https://github.com/NVIDIA/framework-determinism/blob/master/doc/tensorflow.md
+os.environ['PYTHONHASHSEED'] = '0'
+#os.environ['TF_DETERMINISTIC_OPS'] = 'true'
+os.environ['TF_CUDNN_DETERMINISTIC'] = 'true'
+
 from absl import app
 
 from absl import flags
-
+import numpy as np
 import traceback
 import shutil
 import random
+
 import tensorflow as tf
 import glob
+
 
 sys.path.append('../../')
 
@@ -67,14 +74,18 @@ def define_flags():
   flags.DEFINE_string('strategy', None, 'Data resampling strategy')
   flags.DEFINE_integer('num_sample_images', None, 'Number of images of sampling.')
   flags.DEFINE_boolean('debug', False, 'Debug flag')
-
+  flags.DEFINE_integer('seed', 123, 'Random seed.')
+  
 
 class DatasetReSampler:
   def __init__(self, 
-               strategy="CUSTOM_SAMPLIG", 
+               seed     = 123,
+               strategy = "CUSTOM_SAMPLIG", 
                num_sample_images=130,
                data_generator_config=None):
-    self.strategy     = strategy
+    self.seed  = seed
+    self.reset_random_seeds(seed)
+    self.strategy          = strategy
     self.UNDER_SAMPLING    = "UNDER_SAMPLING"
     self.MEAN_SAMPLING     = "MEAN_SAMPLING"
     self.OVER_SAMPLING     = "OVER_SAMPLING"
@@ -92,6 +103,14 @@ class DatasetReSampler:
       raise Exception("Invalid strategy {}".format(self.strategy)) 
     self.data_generator_config = data_generator_config
 
+
+  def reset_random_seeds(self, seed):
+    tf.random.set_seed(seed)
+    np.random.seed(seed)
+    random.seed(seed)
+    tf.compat.v1.set_random_seed(seed)
+
+
   def copy_all(self, mini_dataset, augmented_dataset):
     #print("---  copy_all() ")
     dataset_dir, load_format = mini_dataset
@@ -101,6 +120,7 @@ class DatasetReSampler:
       shutil.copy2(file, save_dataset_dir)
       if FLAGS.debug:
         print("--- copy2 from {} to {}".format(file, save_dataset_dir)) 
+
 
   def random_sampling(self, mini_dataset, augmented_dataset, n_samples):
     #print("---  randoms_sampling() ")
@@ -157,7 +177,8 @@ class DatasetReSampler:
     augmentor.generate(sub_dataset, 
                            aug_sub_dataset, 
                            image_size = image_size,
-                           n_augmentation=num_augmentation)
+                           n_augmentation=num_augmentation,
+                           seed = self.seed)
 
   # Skin Cancer HAM10000
   def run(self, image_size       = (600, 450), 
@@ -281,6 +302,7 @@ def main(_):
     strategy      = FLAGS.strategy
     num_sample_images = FLAGS.num_sample_images
     data_generator_config = FLAGS.data_generator_config
+    seed          = FLAGS.seed
 
     print("--- image_size     {}".format(image_size))
     print("--- dataset_dir    {}".format(data_dir))
@@ -290,9 +312,10 @@ def main(_):
     if not os.path.exists(data_generator_config):
       raise Exception("Not found " + data_generator_config)
 
-    sampler = DatasetReSampler(strategy          = strategy, 
-                               num_sample_images = num_sample_images,
-                               data_generator_config = data_generator_config)
+    sampler = DatasetReSampler(strategy              = strategy, 
+                               num_sample_images     = num_sample_images,
+                               data_generator_config = data_generator_config,
+                               seed                  = seed)
     sampler.run(image_size, data_dir, resampled_dir)
     
   except:

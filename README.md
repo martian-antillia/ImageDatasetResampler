@@ -1,5 +1,5 @@
 <h2>
-ImageDatasetResampler (Updated: 2022/08/20)
+ImageDatasetResampler (Updated: 2022/08/21)
 </h2>
 This is a simple Image Dataset Resampling Tool to resample original
 image dataset, which supports the following strategies:<br>
@@ -14,7 +14,12 @@ In cases of Mean, Over and Custom Samplings, we use <a href="./OfflineDataSetAug
 <pre>
 tf.keras.preprocessing.image.ImageDataGenerator
 </pre>
-is used to augment images in minority classes.
+is used to augment images in minority classes.<br>
+<li>
+2022/08/21: Modified to reset radom_seeds, and to use a seed parameter 
+ in generate method of OfflineDatasetAugmentor class.
+</li>
+<br>
 <h2>
 1 Project 
 </h2>
