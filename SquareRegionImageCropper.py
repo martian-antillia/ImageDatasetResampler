@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# ImageSqureRegionCropper.py
+# SqureRegionImageCropper.py
 
 # 2022/08/22
 
@@ -47,7 +47,7 @@ from OpenCVCroppedImageReader import OpenCVCroppedImageReader
 # Skin-Cancer-HAM10000
 # image size = 600,450
 
-class ImageSquareRegionCropper:
+class SquareRegionImageCropper:
   def __init__(self):
     pass
   # Skin Cancer HAM10000
@@ -103,7 +103,7 @@ def main(_):
       raise Exception("Error: Invalid argment")
     if not os.path.exists(data_dir):
       raise Exception("Invalid data_dir " + data_dir)
-    image_cropper = ImageSquareRegionCropper()
+    image_cropper = SquareRegionImageCropper()
     image_cropper.run(data_dir, cropped_data_dir)
     
   except:
