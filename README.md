@@ -7,16 +7,18 @@ UNDER_SAMPLING,<br>
 MEAN_SAMPLING,<br> 
 OVER_SAMPLING,<br> 
 CUSTOM_SAMPLING.<br>
-<br>
-This tool will be helpful to generate a balanced dataset from an imbalanced image dataset by our resampling strategies.<br><br> 
+
+This tool will be helpful to generate a balanced dataset from an imbalanced image dataset by our resampling strategies.<br>
+<br> 
 We use Python 3.8 and Tensorflow 2.8.0 environment on Windows 11.
 <br>
-In cases of MEAN, OVER and CUSTOM SAMPLING, we use <a href="./OfflineDataSetAugmentor.py">OfflineDataSetAugmentor</a> class, in which
+In cases of MEAN, OVER and CUSTOM SAMPLING strategies, we use <a href="./OfflineDataSetAugmentor.py">OfflineDataSetAugmentor</a> class, in which
 <pre>
 tf.keras.preprocessing.image.ImageDataGenerator
 </pre>
 is used to augment the images in minority classes.<br>
 <br>
+
 <li>
 2022/08/21: Modified to reset radom_seeds, and to use a seed parameter 
  in generate method of OfflineDatasetAugmentor class.
@@ -35,15 +37,15 @@ is used to augment the images in minority classes.<br>
 <h3>
 1.1 Skin-Cancer-HAM10000
 </h3>
-The dataset <b>Skin-Cancer-HAM10000</b> has been taken from the following web site:
+The dataset <b>Skin-Cancer-HAM10000</b> has been taken from the following web site:<br>
 
 The HAM10000 dataset, a large collection of multi-source dermatoscopic images of common pigmented skin lesions
 
-Harvard edu dataset:
+Harvard edu dataset:<br>
 
  https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/DBW86T
 
-
+<br>
 HAM10000 folder has Testing and Training subfolders, and they have classified subfolders
 of akiec, bcc, bkl, df, mel, nv, and vasc as shown below:
 
