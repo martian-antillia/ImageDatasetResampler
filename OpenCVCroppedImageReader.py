@@ -33,9 +33,10 @@ class OpenCVCroppedImageReader(OpenCVImageReader):
     super(OpenCVCroppedImageReader, self).__init__(to_rgb)
 
 
-  def crop_max_square_region(self, image, scale=None):
+  def crop_max_square_region(self, image, scale=None, debug=False):
     h, w = image.shape[:2]
-    print ("w:" + str(w) + " h:" + str(h))
+    if debug:
+      print ("w:" + str(w) + " h:" + str(h))
     
     # Get a size of a maximum square region of the image 
     if w > h:

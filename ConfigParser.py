@@ -29,14 +29,16 @@ class ConfigParser:
 
   # Constructor
   # 
-  def __init__(self, config_path):
-    print("==== ConfigParser {}".format(config_path))
+  def __init__(self, config_path, debug=False):
+    if debug:
+      print("==== ConfigParser {}".format(config_path))
     if not os.path.exists(config_path):
       raise Exception("Not found config_path {}".format(config_path))
 
     try:
       self.parse(config_path)
-      self.dump_all()
+      if debug:
+        self.dump_all()
     except Exception as ex:
       print("==== ConfigParser Exception -----------------------{}".format(ex))
       

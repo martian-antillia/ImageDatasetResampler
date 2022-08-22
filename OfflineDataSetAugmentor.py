@@ -63,9 +63,10 @@ class OfflineDataSetAugmentor:
               augmented_dataset, 
               image_size     =(128, 128), 
               n_augmentation = 1000,
-              seed           = 123):
-  
-    print("--- OfflineDataSetAugmentor.generate()")
+              seed           = 123,
+              debug          = False):
+    if debug:
+      print("--- OfflineDataSetAugmentor.generate()")
 
     self.mini_dataset_folder, self.load_format = mini_dataset
   
@@ -73,9 +74,11 @@ class OfflineDataSetAugmentor:
 
 
     self.size        = image_size
-    print("--- self.size {}".format(self.size))
-    #subfolders = sorted( os.listdir(self.mini_dataset_folder) )
-    print("--- base mini_dataset_folder {}".format(self.mini_dataset_folder))
+
+    if debug:
+      print("--- self.size {}".format(self.size))
+      #subfolders = sorted( os.listdir(self.mini_dataset_folder) )
+      print("--- base mini_dataset_folder {}".format(self.mini_dataset_folder))
 
     #for index, folder in enumerate(subfolders):
     dir = self.mini_dataset_folder # os.path.join(self.mini_dataset_folder, folder)
@@ -109,7 +112,8 @@ class OfflineDataSetAugmentor:
 
           # Get generated images from the flow, and save them to the save_folder  
           for i in range(n_augmentation):
-            print(str(i) + " Saving a generated image to :" + save_folder)
+            if debug:
+              print(str(i) + " Saving a generated image to :" + save_folder)
 
             # Get a generated image from the flow, which is saved automatically.
             batches = next(flow)

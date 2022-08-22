@@ -1,25 +1,33 @@
 <h2>
-ImageDatasetResampler (Updated: 2022/08/21)
+ImageDatasetResampler (Updated: 2022/08/22)
 </h2>
-This is a simple Image Dataset Resampling Tool to resample original
+This is a simple <b>Image Dataset Resampling Tool</b> to resample original
 image dataset, which supports the following strategies:<br>
-Under_Sampling,<br>
-Mean_Sampling,<br> 
-Over_Sampling,<br> 
-Custom_Sampling.<br>
+UNDER_SAMPLING,<br>
+MEAN_SAMPLING,<br> 
+OVER_SAMPLING,<br> 
+CUSTOM_SAMPLING.<br>
 <br>
+This tool will be helpful to generate a balanced dataset from an imbalanced image dataset by our resampling strategies.<br><br> 
 We use Python 3.8 and Tensorflow 2.8.0 environment on Windows 11.
 <br>
-In cases of Mean, Over and Custom Samplings, we use <a href="./OfflineDataSetAugmentor.py">OfflineDataSetAugmentor</a> class, in which
+In cases of MEAN, OVER and CUSTOM SAMPLING, we use <a href="./OfflineDataSetAugmentor.py">OfflineDataSetAugmentor</a> class, in which
 <pre>
 tf.keras.preprocessing.image.ImageDataGenerator
 </pre>
-is used to augment images in minority classes.<br>
+is used to augment the images in minority classes.<br>
 <br>
 <li>
 2022/08/21: Modified to reset radom_seeds, and to use a seed parameter 
  in generate method of OfflineDatasetAugmentor class.
 </li>
+<li>
+2022/08/22: Added <a href="./SquareRegionImageCropper.py">SquareRegionImageCropper</a> class to crop maximum square region from the original images.
+</li>
+<li>
+2022/08/22: Added a script file to create <b>Cropped_HAM10000</b> dataset, and <b>Cropped_Resampled_HAM10000_300</b> dataset.
+</li>
+
 <br>
 <h2>
 1 Project 
@@ -58,18 +66,19 @@ HAM10000
     ├─nv
     └─vasc
 </pre>
-Training dataset has been reconstructed from 
-  HAM10000_images_part_1.zip and HAM10000_metadata.tab in Harvard edu dataset above:
+Training dataset has been reconstructed from <br>
+  <b>HAM10000_images_part_1.zip and HAM10000_metadata.tab</b> in Harvard edu dataset above:
+<br>
 
-
-Training dataset has been reconstructed from 
-  HAM10000_images_part_2.zip and HAM10000_metadata.tab in Harvard edu dataset above:
-
+Testing dataset has been reconstructed from <br>
+  <b>HAM10000_images_part_2.zip and HAM10000_metadata.tab</b> in Harvard edu dataset above:
+<br>
 
 <h3>
 1.2 Resampling Skin-Cancer-HAM10000
 </h3>
-Skin-Cancer-HAM10000 dataset is a typical imbalanced dataset.
+As you may know, Skin-Cancer-HAM10000 dataset is a typical imbalanced dataset, so we would like to create to a balanced dataset
+by resampling images from the orginal HAM10000 dataset.
 <br>
 <h3>
 1.2.1 Resampling training dataset
@@ -120,57 +129,77 @@ You can download the generated <b>Skin Cancer Resampled_HAM10000</b> dataset fro
 <!--
   -->
 <h3>
-1.3 Resampling Skin-Cancer-HAM10000-500
+1.3 Apply SquareRegionImageCropper to HAM10000
 </h3>
-You can also generate other Resampled dataset from Skin-Cancer-HAM10000 dataset.
+You can generate Square-Region-Cropped HAM10000 dataset from Skin-Cancer-HAM10000 dataset by using
+<a href="./SquareRegionImageCropper.py">SquareRegionImageCropper</a>.
 <br>
 <h3>
-1.3.1 Resampling training dataset
+1.3.1 ImageSquareRegionCropper
 </h3>
-Run the following command to generate Resampled-HAM10000-500/Training dataset:<br>
+Run the following command to create Cropped_HAM10000 dataset from the original HAM10000:<br>
 <pre>
-./1_train_dataset_resampler_500.bat
+./0_create_cropped_image_dataset.bat
 </pre>
 <pre>
-rem 1_train_dataset_resampler_500.bat
-python ../../DatasetSampler.py ^
+rem 0_create_cropped_image_dataset.bat
+python ../../SquareRegionImageCropper.py ^
+  ./HAM10000/Training ^
+  ./Cropped_HAM10000/Training
+  
+python ../../SquareRegionImageCropper.py ^
+  ./HAM10000/Testing ^
+  ./Cropped_HAM10000/Testing</pre>
+Console output:<br>
+<img src="./asset/create_cropped_image_dataset.png" with="720" height="auto">
+<br>
+<br>
+This scripts will generate the cropped images of square region size (450, 450) from original images of size (600, 450) in HAM10000.
+<br>
+
+<h3>
+1.4 Resampling Cropped_HAM10000 dataset
+</h3>
+
+<h3>1.4.1 Resampling training dataset
+</h3>
+Run the following command to generate Cropped_Resampled_HAM10000_300/Training dataset:<br>
+<pre>
+./1_cropped_train_dataset_resampler_300.bat
+</pre>
+<pre>
+rem 1_cropped_train_dataset_resampler_300.bat
+python ../../DatasetResampler.py ^
   --data_generator_config=./data_generator.config ^
-  --image_size=600x450 ^
-  --data_dir=./HAM10000/Training  ^
-  --resampled_dir=./Resampled_HAM10000-500/Training ^
+  --image_size=450x450 ^
+  --data_dir=./Cropped_HAM10000/Training  ^
+  --resampled_dir=./Cropped_Resampled_HAM10000_300/Training ^
   --strategy=CUSTOM_SAMPLING ^
-  --num_sample_images=500
+  --num_sample_images=300
 </pre>
 Console output:<br>
-<img src="./asset/train_dataset_resampling_num_sample_image_500.png" with="720" height="auto">
-<br>
-<h3>
-1.3.2 Resampling tesing dataset
+<img src="./asset/cropped_train_dataset_resampler_300.png" with="720" height="auto">
+
+
+<h3>1.4.2 Resampling testing dataset
 </h3>
-Run the following command:<br>
+Run the following command to generate Cropped_Resampled_HAM10000_300/Testing dataset:<br>
 <pre>
-./2_test_dataset_resampler_500.bat
+./2_cropped_test_dataset_resampler_300.bat
 </pre>
 <pre>
-rem 2_test_dataset_resampler_500.bat
+rem 2_cropped_test_dataset_resampler_300.bat
 python ../../DatasetReSampler.py ^
   --data_generator_config=./data_generator.config ^
-  --image_size=600x450 ^
-  --data_dir=./HAM10000/Testing  ^
-  --resampled_dir=./Resampled_HAM10000-500/Testing ^
+  --image_size=450x450 ^
+  --data_dir=./Cropped_HAM10000/Testing  ^
+  --resampled_dir=./Cropped_Resampled_HAM10000_300/Testing ^
   --strategy=CUSTOM_SAMPLING ^
-  --num_sample_images=150
+  --num_sample_images=100
 </pre>
 Console output:<br>
-<img src="./asset/test_dataset_resampling_num_sample_image_500.png" with="720" height="auto">
+<img src="./asset/cropped_test_dataset_resampler_300.png" with="720" height="auto">
 
 
-<h3>
-1.2.3 Download Resampled_HAM10000-500
-</h3>
-You can download the generated <b>Skin Cancer Resampled_HAM10000-500</b> dataset from the following google drive:<br>
-<a href="https://drive.google.com/file/d/1YMiBacM_5kEn82z7nPy02hAf4Tko0cIG/view?usp=sharing">
-Resampled_HAM10000-500.zip
-</a>
 
 

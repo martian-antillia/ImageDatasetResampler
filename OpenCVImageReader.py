@@ -34,7 +34,7 @@ class OpenCVImageReader:
     
   def read(self, filename="", flag=cv2.IMREAD_COLOR):
     abspath = os.path.abspath(filename)
-    print("abspath:{}".format(abspath))
+    #print("abspath:{}".format(abspath))
    
     if not os.path.isfile(abspath):
       raise FileNotFoundError(errno.ENOENT, 
