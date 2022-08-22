@@ -77,7 +77,7 @@ Testing dataset has been reconstructed from <br>
 <h3>
 1.2 Resampling Skin-Cancer-HAM10000
 </h3>
-As you may know, Skin-Cancer-HAM10000 dataset is a typical imbalanced dataset, so we would like to create to a balanced dataset
+As you may know, Skin-Cancer-HAM10000 dataset is a typical imbalanced dataset, so we would like to create a balanced dataset
 by resampling images from the orginal HAM10000 dataset.
 <br>
 <h3>
