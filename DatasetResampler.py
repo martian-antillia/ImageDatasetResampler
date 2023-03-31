@@ -68,6 +68,7 @@ def define_flags():
   flags.DEFINE_string('data_generator_config', None, 'Path to an image augmentation configuration file.')
 
   flags.DEFINE_string('image_size', '600x450', 'Image size (WIDTHxHEIGNT).')
+  flags.DEFINE_string('image_format', 'jpg', 'Image format.')
 
   flags.DEFINE_string('data_dir', None, 'Locattion of orignal dataset images.')
   flags.DEFINE_string('resampled_dir',  None, 'Location of resampled dataset images')
@@ -79,6 +80,7 @@ def define_flags():
 
 class DatasetReSampler:
   def __init__(self, 
+               image_format = "jpg",
                seed     = 123,
                strategy = "CUSTOM_SAMPLIG", 
                num_sample_images=130,
@@ -90,7 +92,8 @@ class DatasetReSampler:
     self.MEAN_SAMPLING     = "MEAN_SAMPLING"
     self.OVER_SAMPLING     = "OVER_SAMPLING"
     self.CUSTOM_SAMPLING   = "CUSTOM_SAMPLING"
-    self.image_format      = "jpg"
+    # 2023/03/31
+    self.image_format      = image_format  # "jpg"
     self.RANDOM_SAMPLING   = 0
     self.COPY_ALL          = 1
     self.NEED_AUGMENTATION = 2
@@ -284,7 +287,8 @@ class DatasetReSampler:
     
     for label in labels:
       subdir = os.path.join(dataset_dir, label)
-      files  = glob.glob(subdir + "/*.jpg")
+      # 2023/03/31
+      files  = glob.glob(subdir + "/*." + self.image_format) # jpg"
       flen   = len(files)
       statistics.append((label, flen))
     print("--- statistics:\n{}".format(statistics))
@@ -296,6 +300,9 @@ def main(_):
   try:
     image_size    = FLAGS.image_size
     w, h          = image_size.split("x")
+    #2023/03/31
+    image_format  = FLAGS.image_format
+
     image_size    = (int(w), int(h))
     data_dir      = FLAGS.data_dir
     resampled_dir = FLAGS.resampled_dir
@@ -304,6 +311,7 @@ def main(_):
     data_generator_config = FLAGS.data_generator_config
     seed          = FLAGS.seed
 
+    print("--- image_format   {}".format(image_format))
     print("--- image_size     {}".format(image_size))
     print("--- dataset_dir    {}".format(data_dir))
     print("--- resampled_dir  {}".format(resampled_dir ))
@@ -312,11 +320,15 @@ def main(_):
     if not os.path.exists(data_generator_config):
       raise Exception("Not found " + data_generator_config)
 
-    sampler = DatasetReSampler(strategy              = strategy, 
+    sampler = DatasetReSampler(image_format          = image_format,
+                               strategy              = strategy, 
                                num_sample_images     = num_sample_images,
                                data_generator_config = data_generator_config,
                                seed                  = seed)
-    sampler.run(image_size, data_dir, resampled_dir)
+    # 2023/03/31
+    sampler.run(image_size                = image_size, 
+                base_dataset_dir          = data_dir,
+                base_augment_dataset_dir  = resampled_dir)
     
   except:
     traceback.print_exc()
