@@ -4,7 +4,7 @@ python ../../DatasetResampler.py ^
   --image_size=360x360 ^
   --image_format=tiff ^
   --data_dir=./AML-Cytomorphology  ^
-  --resampled_dir=./Resampled_AML-Cytomorphology_2000_360x360 ^
+  --resampled_dir=./Resampled_AML-Cytomorphology_400_360x360 ^
   --strategy=CUSTOM_SAMPLING ^
-  --num_sample_images=2000
+  --num_sample_images=400
 

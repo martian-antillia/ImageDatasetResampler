@@ -1,5 +1,5 @@
 <h2>
-ImageDatasetResampler (Updated: 2022/08/22)
+ImageDatasetResampler (Updated: 2023/04/02)
 </h2>
 This is a simple <b>Image Dataset Resampling Tool</b> to resample original
 image dataset, which supports the following strategies:<br>
@@ -29,10 +29,32 @@ is used to augment the images in minority classes.<br>
 <li>
 2022/08/22: Added a script file to create <b>Cropped_HAM10000</b> dataset, and <b>Cropped_Resampled_HAM10000_300</b> dataset.
 </li>
+<li>
+2023/04/01: Modified commadline resampling bat file to specify --image_format argument.
+</li>
+<li>
+2023/04/01: Added resamling example AML to projects.
+<pre>
+The AML image dataset used here has been taken from the following web site;
+CANCER IMAGING ARCHIVE
+https://faspex.cancerimagingarchive.net/aspera/faspex/external_deliveries/77?passcode=a6be8bf0a97ddb34fc0913f37b8180d8f7d616a7
+
+Package - AML-Cytomorphology
+From:
+Natasha Honomichl
+To:
+help@cancerimagingarchive.net 
+CC (on download):
+Natasha Honomichl
+Date Sent:
+17 Feb 2021 01:11 PM
+</pre>
+ 
+</li>
 
 <br>
 <h2>
-1 Project 
+1 Project:Skin-Cancer-HAM10000
 </h2>
 <h3>
 1.1 Skin-Cancer-HAM10000
@@ -202,6 +224,92 @@ python ../../DatasetReSampler.py ^
 Console output:<br>
 <img src="./asset/cropped_test_dataset_resampler_300.png" with="720" height="auto">
 
+<h2>
+2 Project:AML
+</h2>
+<h3>
+2.1 AML-Cytomorphology
+</h3>
+The AML image dataset used here has been taken from the following web site;
+CANCER IMAGING ARCHIVE
+<pre>
+https://faspex.cancerimagingarchive.net/aspera/faspex/external_deliveries/77?passcode=a6be8bf0a97ddb34fc0913f37b8180d8f7d616a7
+
+Package - AML-Cytomorphology
+From:
+Natasha Honomichl
+To:
+help@cancerimagingarchive.net 
+CC (on download):
+Natasha Honomichl
+Date Sent:
+17 Feb 2021 01:11 PM
+</pre>
+
+2.2 Image dataset
+AML-Cytomorphology folder contains the following subfoloder, and each subfoldoer contains a lot of tiff image files.
+<pre>
+└─AML-Cytomorphology
+    ├─BAS   (num_images:   79)
+    ├─EBO   (num_images:   78)
+    ├─EOS   (num_images:  424)
+    ├─KSC   (num_images:   15)
+    ├─LYA   (num_images:   11)
+    ├─LYT   (num_images: 3937)
+    ├─MMZ   (num_images:   15)
+    ├─MOB   (num_images:   26)
+    ├─MON   (num_images: 1789)
+    ├─MYB   (num_images:   42)
+    ├─MYO   (num_images: 3268)
+    ├─NGB   (num_images:  109)
+    ├─NGS   (num_images: 8484)
+    ├─PMB   (num_images:   18)
+    └─PMO   (num_images:   70)
+</pre>
+
+Apparently, this dataset is extremely inbalanced, because the minimum numbe of images is 11 in 'LYA', and the maximum is 8494 in 'NGS'.
+
+
+2.3 Resampling
+Please run the following resampling bat file.<br>
+<pre>
+>./1_resample.bat
+</pre>
+
+<pre>
+rem 1_resample.bat
+python ../../DatasetResampler.py ^
+  --data_generator_config=./data_generator.config ^
+  --image_size=360x360 ^
+  --image_format=tiff ^
+  --data_dir=./AML-Cytomorphology  ^
+  --resampled_dir=./Resampled_AML-Cytomorphology_400_360x360 ^
+  --strategy=CUSTOM_SAMPLING ^
+  --num_sample_images=400
+</pre>
+
+,data_generator.config is the following.
+<pre>
+</pre>
+; data_generation.config
+<pre>
+[parameters]
+;validation_split   = 0.2
+featurewise_center = False
+samplewise_center  = False
+featurewise_std_normalization=False
+samplewise_std_normalization =False
+zca_whitening                =False
+rotation_range     = 60
+horizontal_flip    = True
+vertical_flip      = True
+ 
+width_shift_range  = 0.01
+height_shift_range = 0.01
+shear_range        = 0.00
+zoom_range         = [0.8, 1.2]
+data_format        = "channels_last"
+</pre>
 
 
 
